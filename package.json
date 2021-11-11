@@ -1,0 +1,33 @@
+{
+  "name": "@ostro/cookie",
+  "version": "0.0.0-alpha.0",
+  "description": "easy to access and store cookie for nodejs",
+  "engines": {
+    "node": ">= 12.0"
+  },
+  "main": "jar.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@ostro/support": "^0.0.0-alpha.0",
+    "@ostro/contracts": "^0.0.0-alpha.0",
+    "cookie": "^0.4.0",
+    "cookie-signature": "^1.1.0",
+    "lodash.set": "^4.3.2"
+  },
+  "keywords": [
+    "cookie",
+    "http cookie"
+  ],
+  "author": "amar",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ostrojs/cookie.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ostrojs/cookie/issues"
+  },
+  "homepage": "https://github.com/ostrojs/cookie#readme"
+}

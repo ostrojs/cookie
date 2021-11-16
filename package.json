@@ -1,24 +1,24 @@
 {
   "name": "@ostro/cookie",
   "version": "0.0.0-alpha.0",
-  "description": "easy to access and store cookie for nodejs",
-  "engines": {
-    "node": ">= 12.0"
-  },
+  "description": "Cookie module for OstroJS",
   "main": "jar.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@ostro/support": "^0.0.0-alpha.0",
-    "@ostro/contracts": "^0.0.0-alpha.0",
+    "@ostro/support": "^0.0.0-alpha",
+    "@ostro/contracts": "^0.0.0-alpha",
     "cookie": "^0.4.0",
     "cookie-signature": "^1.1.0",
     "lodash.set": "^4.3.2"
   },
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "engineStrict": true,
   "keywords": [
-    "cookie",
-    "http cookie"
+    "cookie"
   ],
   "author": "amar",
   "license": "MIT",

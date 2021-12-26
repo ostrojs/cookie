@@ -7,23 +7,22 @@ const kJar = Symbol('jar')
 
 class Cookie {
 
-    [kJar];
-
-    [kCookies];
-
-    [kSignedCookies];
-
-    [kRequest];
-
-    [kResponse];
-
     constructor(jar, cookies, signedCookies, request, response) {
-        this[kJar] = jar;
+        Object.defineProperties(this, {
+            [kJar]: {
+                value: jar
+            },
+            [kSignedCookies]: {
+                value: signedCookies
+            },
+            [kRequest]: {
+                value: request,
+            },
+            [kResponse]: {
+                value: response
+            }
+        })
         this[kCookies] = cookies;
-        this[kSignedCookies] = signedCookies;
-
-        this[kRequest] = request;
-        this[kResponse] = response;
     }
 
     get(key, defaultValue = null) {

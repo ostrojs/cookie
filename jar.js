@@ -10,9 +10,9 @@ const kSignedCookie = Symbol('signedCookie')
 const kApp = Symbol('app')
 const kConfig = Symbol('config')
 const Cookie = require('./cookie')
-const {luxon,moments} = require('@ostro/support/function')
-class Jar extends JarContract{
-    constructor(app,config) {
+const { luxon, moments } = require('@ostro/support/function')
+class Jar extends JarContract {
+    constructor(app, config) {
         super()
         Object.defineProperty(this, kApp, {
             value: app,
@@ -26,11 +26,11 @@ class Jar extends JarContract{
         this[kConfig]['domain'] = config['domain'] != undefined ? config['domain'] : null;
         this[kConfig]['secure'] = config['secure'] != undefined ? JSON.parse(config['secure']) : false;
         this[kConfig]['httpOnly'] = config['http_only'] != undefined ? JSON.parse(config['http_only']) : true;
-        this[kConfig]['maxAge'] = config['lifetime'] != undefined ? parseInt(config['lifetime']*60) : 0;
+        this[kConfig]['maxAge'] = config['lifetime'] != undefined ? parseInt(config['lifetime'] * 60) : 0;
     }
 
     [kCreateCookies](name, value, options = {}, isSecure = false) {
-        options = {...this[kConfig],
+        options = { ...this[kConfig],
             ...options
         }
         if (!isSecure) {
@@ -51,17 +51,17 @@ class Jar extends JarContract{
         return cookie.serialize(name, String(val), options)
     }
 
-    createCookies(name, value, options = {}, isSecure = false){
+    createCookies(name, value, options = {}, isSecure = false) {
         return this[kCreateCookies](name, value, options, isSecure);
     }
-    getJsonCookies(cookies,options={}){
-        return this[kJSONCookies](cookies,options)
+    getJsonCookies(cookies, options = {}) {
+        return this[kJSONCookies](cookies, options)
     }
-    getCookies(cookies='', options={}){
-        return this.getJsonCookies(cookie.parse(cookies, options),options)
+    getCookies(cookies = '', options = {}) {
+        return this.getJsonCookies(cookie.parse(cookies, options), options)
     }
-    getSignedCookies(cookies, secrets, options={}){
-        return secrets? this[kSignedCookies]( cookies, secrets):{}
+    getSignedCookies(cookies, secrets, options = {}) {
+        return secrets ? this[kSignedCookies](cookies, secrets) : {}
     }
     parse(options) {
 
@@ -72,7 +72,11 @@ class Jar extends JarContract{
                 return next()
             }
             var cookies = req.headers.cookie
-            req.cookie = new Cookie(this,this.getCookies(cookies, options),this.getSignedCookies(cookies, secrets, options),req,res)
+            req.cookie = new Cookie(this, this.getCookies(cookies, options), this.getSignedCookies(cookies, secrets, options), req, res)
+            res.cookie = function() {
+                req.cookie.set(...arguments)
+                return this
+            }
             next()
         }
     }
@@ -89,7 +93,7 @@ class Jar extends JarContract{
         }
     }
 
-    [kJSONCookies](obj=Object.create(null)) {
+    [kJSONCookies](obj = Object.create(null)) {
         var cookies = Object.keys(obj)
         var key
         var val
@@ -116,8 +120,7 @@ class Jar extends JarContract{
         }
 
         var secrets = !secret || Array.isArray(secret) ?
-            (secret || []) :
-            [secret]
+            (secret || []) : [secret]
 
         for (var i = 0; i < secrets.length; i++) {
             var val = signature.unsign(str.slice(2), secrets[i])

@@ -1,14 +1,14 @@
 {
   "name": "@ostro/cookie",
-  "version": "0.0.0-alpha.2",
+  "version": "1.0.0",
   "description": "Cookie module for OstroJS",
   "main": "jar.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@ostro/support": "^0.0.0-alpha",
-    "@ostro/contracts": "^0.0.0-alpha",
+    "@ostro/support": "^1.0.2",
+    "@ostro/contracts": "^1.0.0",
     "cookie": "^0.4.0",
     "cookie-signature": "^1.1.0",
     "lodash.set": "^4.3.2"

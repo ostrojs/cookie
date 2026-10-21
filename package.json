@@ -1,33 +1,55 @@
 {
-  "name": "@ostro/cookie",
-  "version": "1.0.2",
-  "description": "Cookie module for OstroJS",
-  "main": "jar.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "dependencies": {
-    "@ostro/support": "^1.0.2",
-    "@ostro/contracts": "^1.0.0",
-    "cookie": "^0.4.0",
-    "cookie-signature": "^1.1.0",
-    "lodash.set": "^4.3.2"
-  },
-  "engines": {
-    "node": ">=12.0.0"
-  },
-  "engineStrict": true,
-  "keywords": [
-    "cookie"
-  ],
-  "author": "amar",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ostrojs/cookie.git"
-  },
-  "bugs": {
-    "url": "https://github.com/ostrojs/cookie/issues"
-  },
-  "homepage": "https://github.com/ostrojs/cookie#readme"
+    "name": "@ostro/cookie",
+    "version": "2.0.0-alpha.1",
+    "description": "Cookie module for OstroJS",
+    "main": "build/jar.js",
+    "scripts": {
+        "test": "npx c8 npx jest",
+        "build": "tsc -p tsconfig.build.json && node scripts/build.js",
+        "prepublishOnly": "npm run build",
+        "clean": "rm -rf build coverage"
+    },
+    "dependencies": {
+        "@ostro/contracts": "^2.0.0-alpha.1",
+        "@ostro/support": "^2.0.0-alpha.1",
+        "cookie": "^0.7.2",
+        "cookie-signature": "^1.2.1",
+        "lodash.get": "^4.4.2",
+        "lodash.set": "^4.3.2"
+    },
+    "engines": {
+        "node": ">=18.0.0"
+    },
+    "engineStrict": true,
+    "keywords": [
+        "cookie"
+    ],
+    "author": "amar",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ostrojs/cookie.git"
+    },
+    "bugs": {
+        "url": "https://github.com/ostrojs/cookie/issues"
+    },
+    "homepage": "https://github.com/ostrojs/cookie#readme",
+    "types": "build/jar.d.ts",
+    "files": [
+        "build"
+    ],
+    "exports": {
+        ".": {
+            "types": "./build/jar.d.ts",
+            "default": "./build/jar.js"
+        },
+        "./*": {
+            "types": "./build/*.d.ts",
+            "default": "./build/*.js"
+        }
+    },
+    "devDependencies": {
+        "@types/node": "^22.20.5",
+        "typescript": "^5.8.0"
+    }
 }

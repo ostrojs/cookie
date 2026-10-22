@@ -1,6 +1,6 @@
 {
     "name": "@ostro/cookie",
-    "version": "2.0.0-alpha.1",
+    "version": "2.0.0-alpha.2",
     "description": "Cookie module for OstroJS",
     "main": "build/jar.js",
     "scripts": {
@@ -10,8 +10,8 @@
         "clean": "rm -rf build coverage"
     },
     "dependencies": {
-        "@ostro/contracts": "^2.0.0-alpha.1",
-        "@ostro/support": "^2.0.0-alpha.1",
+        "@ostro/contracts": "^2.0.0-alpha.2",
+        "@ostro/support": "^2.0.0-alpha.2",
         "cookie": "^0.7.2",
         "cookie-signature": "^1.2.1",
         "lodash.get": "^4.4.2",
@@ -34,17 +34,17 @@
         "url": "https://github.com/ostrojs/cookie/issues"
     },
     "homepage": "https://github.com/ostrojs/cookie#readme",
-    "types": "build/jar.d.ts",
+    "types": "./build/types/jar.d.ts",
     "files": [
         "build"
     ],
     "exports": {
         ".": {
-            "types": "./build/jar.d.ts",
+            "types": "./build/types/jar.d.ts",
             "default": "./build/jar.js"
         },
         "./*": {
-            "types": "./build/*.d.ts",
+            "types": "./build/types/*.d.ts",
             "default": "./build/*.js"
         }
     },

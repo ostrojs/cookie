@@ -22,12 +22,6 @@ export default {
         '^.+\\.ts$': [tsJestPath, { tsconfig: '<rootDir>/tsconfig.json' }]
     },
     moduleNameMapper: {
-        '^@ostro/support/(.*)$': '<rootDir>/../support/src/$1',
-        '^@ostro/support$': '<rootDir>/../support/src',
-        '^@ostro/contracts/(.*)$': '<rootDir>/../contracts/src/$1',
-        '^@ostro/contracts$': '<rootDir>/../contracts/src',
-        '^@ostro/console/(.*)$': '<rootDir>/../console/src/$1',
-        '^@ostro/console$': '<rootDir>/../console/src/application.js',
         '^@ostro/cookie/(.*)$': '<rootDir>/src/$1',
         '^@ostro/cookie$': '<rootDir>/src/jar'
     },

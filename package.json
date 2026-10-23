@@ -1,6 +1,6 @@
 {
     "name": "@ostro/cookie",
-    "version": "2.0.0-alpha.7",
+    "version": "2.0.0-alpha.8",
     "description": "Cookie module for OstroJS",
     "main": "jar.js",
     "scripts": {
@@ -11,8 +11,8 @@
         "lint:check": "tsc --noEmit -p tsconfig.build.json"
     },
     "dependencies": {
-        "@ostro/contracts": "^2.0.0-alpha.8",
-        "@ostro/support": "^2.0.0-alpha.9",
+        "@ostro/contracts": "^2.0.0-alpha.9",
+        "@ostro/support": "^2.0.0-alpha.10",
         "cookie": "^0.7.2",
         "cookie-signature": "^1.2.2",
         "lodash.get": "^4.4.2",
@@ -47,7 +47,7 @@
         }
     },
     "devDependencies": {
-        "@ostro/builder": "^2.0.0-alpha.6",
+        "@ostro/builder": "^2.0.0-alpha.7",
         "@types/jest": "^30.0.0",
         "@types/node": "^22.0.0",
         "c8": "^10.1.3",

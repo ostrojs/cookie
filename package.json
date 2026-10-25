@@ -1,6 +1,6 @@
 {
     "name": "@ostro/cookie",
-    "version": "2.0.0-alpha.3",
+    "version": "2.0.0-alpha.4",
     "description": "Cookie module for OstroJS",
     "main": "jar.js",
     "scripts": {

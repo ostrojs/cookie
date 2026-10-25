@@ -1,21 +1,15 @@
 import ObjectGet from 'lodash.get';
 import type { CookieOptions } from '@ostro/contracts/cookie/jar';
 
-const kCookies: unique symbol = Symbol('cookies');
-const kSignedCookies: unique symbol = Symbol('signedCookies');
-const kRequest: unique symbol = Symbol('request');
-const kResponse: unique symbol = Symbol('response');
-const kJar: unique symbol = Symbol('jar');
-
 /**
  * Request cookie accessor and mutator facade.
  */
 class Cookie {
-    [kCookies]: Record<string, any>;
-    [kSignedCookies]!: Record<string, any>;
-    [kRequest]!: any;
-    [kResponse]!: any;
-    [kJar]!: any;
+    #cookies: Record<string, any>;
+    #signedCookies: Record<string, any>;
+    #request: any;
+    #response: any;
+    #jar: any;
 
     /**
      * Create a new Cookie interaction instance.
@@ -27,21 +21,11 @@ class Cookie {
      * @param response - Outgoing HTTP response.
      */
     constructor(jar: any, cookies: Record<string, any>, signedCookies: Record<string, any>, request: any, response: any) {
-        Object.defineProperties(this, {
-            [kJar]: {
-                value: jar
-            },
-            [kSignedCookies]: {
-                value: signedCookies
-            },
-            [kRequest]: {
-                value: request,
-            },
-            [kResponse]: {
-                value: response
-            }
-        });
-        this[kCookies] = cookies;
+        this.#jar = jar;
+        this.#signedCookies = signedCookies;
+        this.#request = request;
+        this.#response = response;
+        this.#cookies = cookies;
     }
 
     /**
@@ -65,8 +49,8 @@ class Cookie {
      * @returns Fluent self instance.
      */
     set(key: string, value: any, options: CookieOptions = {}): this {
-        const isSecure: boolean = typeof this[kRequest]?.secure === 'function' ? this[kRequest].secure() : false;
-        this[kResponse].append('Set-Cookie', this[kJar].createCookies(key, value, options, isSecure));
+        const isSecure: boolean = typeof this.#request?.secure === 'function' ? this.#request.secure() : false;
+        this.#response.append('Set-Cookie', this.#jar.createCookies(key, value, options, isSecure));
         return this;
     }
 
@@ -97,7 +81,7 @@ class Cookie {
      * @returns Combined cookies dictionary.
      */
     public all(): Record<string, any> {
-        return { ...this[kCookies], ...this[kSignedCookies] };
+        return { ...this.#cookies, ...this.#signedCookies };
     }
 }
 

@@ -4,20 +4,12 @@ import signature from 'cookie-signature';
 import cookie from 'cookie';
 import Cookie from './cookie';
 
-const kCreateCookies: unique symbol = Symbol('createCookies');
-const kJSONCookies: unique symbol = Symbol('jSONCookies');
-const kJSONCookie: unique symbol = Symbol('jSONCookie');
-const kSignedCookies: unique symbol = Symbol('signedCookies');
-const kSignedCookie: unique symbol = Symbol('signedCookie');
-const kApp: unique symbol = Symbol('app');
-const kConfig: unique symbol = Symbol('config');
-
 /**
  * Cookie Jar managing creation, serialization, signing, and parsing of cookies.
  */
 class Jar extends JarContract implements ICookieJar {
-    [kApp]!: any;
-    [kConfig]: Record<string, any>;
+    #app: any;
+    #config: Record<string, any>;
 
     /**
      * Create a new Cookie Jar instance.
@@ -27,19 +19,14 @@ class Jar extends JarContract implements ICookieJar {
      */
     constructor(app: any, config: Record<string, any> = {}) {
         super();
-        Object.defineProperty(this, kApp, {
-            value: app,
-            writable: false,
-            configurable: false,
-            enumerable: false
-        });
-        this[kConfig] = Object.create(null);
+        this.#app = app;
+        this.#config = Object.create(null);
 
-        this[kConfig]['path'] = config['path'] != undefined ? config['path'] : '/';
-        this[kConfig]['domain'] = config['domain'] != undefined ? config['domain'] : null;
-        this[kConfig]['secure'] = config['secure'] != undefined ? JSON.parse(config['secure']) : false;
-        this[kConfig]['httpOnly'] = config['http_only'] != undefined ? JSON.parse(config['http_only']) : true;
-        this[kConfig]['maxAge'] = config['lifetime'] != undefined ? parseInt(String(config['lifetime'] * 60), 10) : 0;
+        this.#config['path'] = config['path'] != undefined ? config['path'] : '/';
+        this.#config['domain'] = config['domain'] != undefined ? config['domain'] : null;
+        this.#config['secure'] = config['secure'] != undefined ? JSON.parse(config['secure']) : false;
+        this.#config['httpOnly'] = config['http_only'] != undefined ? JSON.parse(config['http_only']) : true;
+        this.#config['maxAge'] = config['lifetime'] != undefined ? parseInt(String(config['lifetime'] * 60), 10) : 0;
     }
 
     /**
@@ -51,15 +38,15 @@ class Jar extends JarContract implements ICookieJar {
      * @param isSecure - Whether connection is secure.
      * @returns Serialized cookie header string.
      */
-    [kCreateCookies](name: string, value: any, options: CookieOptions = {}, isSecure: boolean = false): string {
+    #createCookies(name: string, value: any, options: CookieOptions, isSecure: boolean): string {
         const mergedOptions: Record<string, any> = {
-            ...this[kConfig],
+            ...this.#config,
             ...options
         };
         if (!isSecure) {
             mergedOptions['secure'] = false;
         }
-        if (mergedOptions['signed'] && !this[kApp]['config']['app']['key']) {
+        if (mergedOptions['signed'] && !this.#app['config']['app']['key']) {
             throw new Error('cookieParser("secret") required for signed cookies');
         }
 
@@ -68,7 +55,7 @@ class Jar extends JarContract implements ICookieJar {
             String(value);
 
         if (mergedOptions['signed']) {
-            val = 's:' + signature.sign(val, this[kApp]['config']['app']['key']);
+            val = 's:' + signature.sign(val, this.#app['config']['app']['key']);
         }
 
         return cookie.serialize(name, String(val), mergedOptions);
@@ -84,7 +71,7 @@ class Jar extends JarContract implements ICookieJar {
      * @returns Serialized Set-Cookie string.
      */
     public createCookies(name: string, value: any, options: CookieOptions = {}, isSecure: boolean = false): string {
-        return this[kCreateCookies](name, value, options, isSecure);
+        return this.#createCookies(name, value, options, isSecure);
     }
 
     /**
@@ -95,7 +82,7 @@ class Jar extends JarContract implements ICookieJar {
      * @returns Dictionary with deserialized JSON cookies.
      */
     public getJsonCookies(cookies: Record<string, any>, options: Record<string, any> = {}): Record<string, any> {
-        return this[kJSONCookies](cookies, options);
+        return this.#jsonCookies(cookies, options);
     }
 
     /**
@@ -118,7 +105,7 @@ class Jar extends JarContract implements ICookieJar {
      * @returns Unsigned cookies map.
      */
     public getSignedCookies(cookies: Record<string, any>, secrets: string | string[], options: Record<string, any> = {}): Record<string, any> {
-        return secrets ? this[kSignedCookies](cookies, secrets) : {};
+        return secrets ? this.#signedCookies(cookies, secrets) : {};
     }
 
     /**
@@ -128,7 +115,7 @@ class Jar extends JarContract implements ICookieJar {
      * @returns Connect middleware handler.
      */
     public parse(options?: Record<string, any>): (req: any, res: any, next: (err?: any) => void) => void {
-        const secrets: string | string[] = this[kApp]['config']['app']['key'];
+        const secrets: string | string[] = this.#app['config']['app']['key'];
         return (req: any, res: any, next: (err?: any) => void): void => {
             if (req.cookies) {
                 return next();
@@ -149,7 +136,7 @@ class Jar extends JarContract implements ICookieJar {
      * @param str - Cookie string.
      * @returns Deserialized value or undefined.
      */
-    [kJSONCookie](str: any): any {
+    #jsonCookie(str: any): any {
         if (typeof str !== 'string' || str.slice(0, 2) !== 'j:') {
             return undefined;
         }
@@ -168,14 +155,14 @@ class Jar extends JarContract implements ICookieJar {
      * @param _options - Unused parse options.
      * @returns Mutated object.
      */
-    [kJSONCookies](obj: Record<string, any> = Object.create(null), _options?: Record<string, any>): Record<string, any> {
+    #jsonCookies(obj: Record<string, any>, _options?: Record<string, any>): Record<string, any> {
         const cookies: string[] = Object.keys(obj);
         let key: string;
         let val: any;
 
         for (let i = 0; i < cookies.length; i++) {
             key = cookies[i];
-            val = this[kJSONCookie](obj[key]);
+            val = this.#jsonCookie(obj[key]);
 
             if (val) {
                 obj[key] = val;
@@ -192,7 +179,7 @@ class Jar extends JarContract implements ICookieJar {
      * @param secret - Secret string or array of secrets.
      * @returns Unsigned string, false if tampered, or original string.
      */
-    [kSignedCookie](str: any, secret: string | string[]): any {
+    #signedCookie(str: any, secret: string | string[]): any {
         if (typeof str !== 'string') {
             return undefined;
         }
@@ -201,8 +188,7 @@ class Jar extends JarContract implements ICookieJar {
             return str;
         }
 
-        const secrets: string[] = !secret || Array.isArray(secret) ?
-            ((secret as string[]) || []) : [secret];
+        const secrets: string[] = Array.isArray(secret) ? secret : [secret];
 
         for (let i = 0; i < secrets.length; i++) {
             const val: string | false = signature.unsign(str.slice(2), secrets[i]);
@@ -222,7 +208,7 @@ class Jar extends JarContract implements ICookieJar {
      * @param secret - App key secret.
      * @returns Verified signed cookies dictionary.
      */
-    [kSignedCookies](obj: Record<string, any> = {}, secret: string | string[]): Record<string, any> {
+    #signedCookies(obj: Record<string, any>, secret: string | string[]): Record<string, any> {
         const cookies: string[] = Object.keys(obj);
         let dec: any;
         let key: string;
@@ -232,7 +218,7 @@ class Jar extends JarContract implements ICookieJar {
         for (let i = 0; i < cookies.length; i++) {
             key = cookies[i];
             val = obj[key];
-            dec = this[kSignedCookie](val, secret);
+            dec = this.#signedCookie(val, secret);
 
             if (val !== dec) {
                 ret[key] = dec;

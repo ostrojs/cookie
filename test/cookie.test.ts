@@ -90,6 +90,9 @@ describe('Cookie Class Comprehensive Unit Tests', () => {
         expect(setHeaderCalls).toHaveLength(1);
         expect(setHeaderCalls[0].val).toContain('remember=;');
         expect(jarCreateCalls[0].options.domain).toBe('example.com');
+
+        cookie.clear('default_opts');
+        expect(setHeaderCalls).toHaveLength(2);
     });
 
     test('forever() calculates maxAge 5 days in milliseconds', () => {

@@ -18,8 +18,18 @@ try {
 export default {
     testEnvironment: 'node',
     testMatch: ['**/test/**/*.test.ts', '**/test/**/*.test.js'],
+    modulePathIgnorePatterns: [
+        '<rootDir>/build/'
+    ],
     transform: {
-        '^.+\\.ts$': [tsJestPath, { tsconfig: '<rootDir>/tsconfig.json' }]
+        '^.+\\.ts$': [
+            tsJestPath,
+            {
+                tsconfig: '<rootDir>/tsconfig.json',
+                isolatedModules: true,
+                diagnostics: false
+            }
+        ]
     },
     moduleNameMapper: {
         '^@ostro/cookie/(.*)$': '<rootDir>/src/$1',

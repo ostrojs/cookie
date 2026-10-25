@@ -38,7 +38,7 @@ class Jar extends JarContract implements ICookieJar {
      * @param isSecure - Whether connection is secure.
      * @returns Serialized cookie header string.
      */
-    #createCookies(name: string, value: any, options: CookieOptions = {}, isSecure: boolean = false): string {
+    #createCookies(name: string, value: any, options: CookieOptions, isSecure: boolean): string {
         const mergedOptions: Record<string, any> = {
             ...this.#config,
             ...options
@@ -155,7 +155,7 @@ class Jar extends JarContract implements ICookieJar {
      * @param _options - Unused parse options.
      * @returns Mutated object.
      */
-    #jsonCookies(obj: Record<string, any> = Object.create(null), _options?: Record<string, any>): Record<string, any> {
+    #jsonCookies(obj: Record<string, any>, _options?: Record<string, any>): Record<string, any> {
         const cookies: string[] = Object.keys(obj);
         let key: string;
         let val: any;
@@ -188,8 +188,7 @@ class Jar extends JarContract implements ICookieJar {
             return str;
         }
 
-        const secrets: string[] = !secret || Array.isArray(secret) ?
-            ((secret as string[]) || []) : [secret];
+        const secrets: string[] = Array.isArray(secret) ? secret : [secret];
 
         for (let i = 0; i < secrets.length; i++) {
             const val: string | false = signature.unsign(str.slice(2), secrets[i]);
@@ -209,7 +208,7 @@ class Jar extends JarContract implements ICookieJar {
      * @param secret - App key secret.
      * @returns Verified signed cookies dictionary.
      */
-    #signedCookies(obj: Record<string, any> = {}, secret: string | string[]): Record<string, any> {
+    #signedCookies(obj: Record<string, any>, secret: string | string[]): Record<string, any> {
         const cookies: string[] = Object.keys(obj);
         let dec: any;
         let key: string;

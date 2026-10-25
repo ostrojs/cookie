@@ -133,6 +133,33 @@ describe('Cookie Jar Comprehensive Unit Tests', () => {
 
             expect(nextCalled).toBe(true);
         });
+
+        test('signed cookie with array of secrets and invalid secrets', () => {
+            const signature = require('cookie-signature');
+            const signedVal = 's:' + signature.sign('test_val', 'sec2');
+            const res = jar.getSignedCookies({ my_cookie: signedVal }, ['sec1', 'sec2']);
+            expect(res.my_cookie).toBe('test_val');
+
+            const resFalse = jar.getSignedCookies({ my_cookie: signedVal }, ['wrong_key']);
+            expect(resFalse.my_cookie).toBe(false);
+
+            const resStringSecret = jar.getSignedCookies({ my_cookie: signedVal }, 'sec2');
+            expect(resStringSecret.my_cookie).toBe('test_val');
+
+            const resEmpty = jar.getSignedCookies({ my_cookie: signedVal }, [] as any);
+            expect(resEmpty.my_cookie).toBe(false);
+
+            const resFalsy = jar.getSignedCookies({ my_cookie: signedVal }, null as any);
+            expect(resFalsy).toEqual({});
+
+            // Jar constructor with default config
+            const defaultJar = new Jar(appMock);
+            expect(defaultJar.createCookies('c1', 'v1')).toContain('c1=v1');
+
+            // getCookies and getJsonCookies default arguments
+            expect(jar.getCookies()).toEqual({});
+            expect(jar.getJsonCookies({ test: 'simple' })).toEqual({ test: 'simple' });
+        });
     });
 
 });

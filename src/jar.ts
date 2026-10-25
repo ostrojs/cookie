@@ -120,8 +120,9 @@ class Jar extends JarContract implements ICookieJar {
             if (req.cookies) {
                 return next();
             }
-            const cookies: any = req.headers?.cookie;
-            req.cookie = new Cookie(this, this.getCookies(cookies, options), this.getSignedCookies(cookies, secrets, options), req, res);
+            const rawCookieHeader: any = req.headers?.cookie || '';
+            const parsedCookies = this.getCookies(rawCookieHeader, options);
+            req.cookie = new Cookie(this, parsedCookies, this.getSignedCookies(parsedCookies, secrets, options), req, res);
             res.cookie = function (...args: any[]): any {
                 req.cookie.set(...args);
                 return this;
@@ -208,8 +209,8 @@ class Jar extends JarContract implements ICookieJar {
      * @param secret - App key secret.
      * @returns Verified signed cookies dictionary.
      */
-    #signedCookies(obj: Record<string, any>, secret: string | string[]): Record<string, any> {
-        const cookies: string[] = Object.keys(obj);
+    #signedCookies(obj: Record<string, any> = {}, secret: string | string[]): Record<string, any> {
+        const cookies: string[] = Object.keys(obj || {});
         let dec: any;
         let key: string;
         const ret: Record<string, any> = Object.create(null);

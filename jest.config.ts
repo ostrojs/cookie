@@ -1,6 +1,6 @@
-import { execSync } from "child_process";
-import path from "path";
-import fs from "fs";
+import { execSync } from "node:child_process";
+import path from 'node:path';
+import fs from 'node:fs';
 
 let tsJestPath = "ts-jest";
 try {
@@ -18,8 +18,18 @@ try {
 export default {
     testEnvironment: 'node',
     testMatch: ['**/test/**/*.test.ts', '**/test/**/*.test.js'],
+    modulePathIgnorePatterns: [
+        '<rootDir>/build/'
+    ],
     transform: {
-        '^.+\\.ts$': [tsJestPath, { tsconfig: '<rootDir>/tsconfig.json' }]
+        '^.+\\.ts$': [
+            tsJestPath,
+            {
+                tsconfig: '<rootDir>/tsconfig.json',
+                isolatedModules: true,
+                diagnostics: false
+            }
+        ]
     },
     moduleNameMapper: {
         '^@ostro/cookie/(.*)$': '<rootDir>/src/$1',

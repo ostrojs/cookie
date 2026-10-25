@@ -13,7 +13,7 @@ class CookieParser {
      * Create a new CookieParser middleware instance.
      */
     constructor() {
-        this.$cookie = (this as any).$app['cookie'];
+        this.$cookie = (this as { $app?: { cookie?: unknown } }).$app?.cookie;
         if (this.$cookie instanceof Jar) {
             this.$registered = true;
             this.$cookieParser = this.$cookie.parse();

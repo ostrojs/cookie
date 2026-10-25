@@ -1,18 +1,18 @@
 {
     "name": "@ostro/cookie",
-    "version": "2.0.0-alpha.8",
+    "version": "2.0.0-alpha.3",
     "description": "Cookie module for OstroJS",
     "main": "jar.js",
     "scripts": {
-        "test": "npx c8 npx jest",
-        "build": "npm run lint:check && tsc -p tsconfig.build.json && node scripts/build.js",
+        "test": "jest",
+        "build": "npm run lint:check && rm -rf build && ostro-build --prepare",
         "prepublishOnly": "npm run build",
         "clean": "rm -rf build coverage",
-        "lint:check": "tsc --noEmit -p tsconfig.build.json"
+        "lint:check": "tsc --noEmit"
     },
     "dependencies": {
-        "@ostro/contracts": "^2.0.0-alpha.9",
-        "@ostro/support": "^2.0.0-alpha.10",
+        "@ostro/contracts": "^2.0.0-alpha.3",
+        "@ostro/support": "^2.0.0-alpha.3",
         "cookie": "^0.7.2",
         "cookie-signature": "^1.2.2",
         "lodash.get": "^4.4.2",
@@ -35,19 +35,19 @@
         "url": "https://github.com/ostrojs/cookie/issues"
     },
     "homepage": "https://github.com/ostrojs/cookie#readme",
-    "types": ".types/jar.d.ts",
+    "types": ".typed/jar.d.ts",
     "exports": {
         ".": {
-            "types": "./.types/jar.d.ts",
+            "types": "./.typed/jar.d.ts",
             "default": "./jar.js"
         },
         "./*": {
-            "types": "./.types/*.d.ts",
+            "types": "./.typed/*.d.ts",
             "default": "./*.js"
         }
     },
     "devDependencies": {
-        "@ostro/builder": "^2.0.0-alpha.7",
+        "@ostro/builder": "^2.0.0-alpha.1",
         "@types/jest": "^30.0.0",
         "@types/node": "^22.0.0",
         "c8": "^10.1.3",

@@ -1,3 +1,4 @@
+import { describe, test, expect } from "@jest/globals";
 import CookieServiceProvider from '../src/cookieServiceProvider';
 import Jar from '../src/jar';
 

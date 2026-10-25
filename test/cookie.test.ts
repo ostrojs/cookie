@@ -1,3 +1,4 @@
+import { describe, test, expect, beforeEach } from "@jest/globals";
 import Cookie from '../src/cookie';
 
 describe('Cookie Class Comprehensive Unit Tests', () => {

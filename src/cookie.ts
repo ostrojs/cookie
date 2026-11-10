@@ -1,5 +1,6 @@
 import ObjectGet from 'lodash.get';
 import type { CookieOptions } from '@ostro/contracts/cookie/jar';
+import type { IHttpRequest } from '@ostro/contracts/http/request';
 
 /**
  * Request cookie accessor and mutator facade.
@@ -7,7 +8,7 @@ import type { CookieOptions } from '@ostro/contracts/cookie/jar';
 class Cookie {
     #cookies: Record<string, any>;
     #signedCookies: Record<string, any>;
-    #request: any;
+    #request?: IHttpRequest;
     #response: any;
     #jar: any;
 
@@ -20,7 +21,7 @@ class Cookie {
      * @param request - Incoming HTTP request.
      * @param response - Outgoing HTTP response.
      */
-    constructor(jar: any, cookies: Record<string, any>, signedCookies: Record<string, any>, request: any, response: any) {
+    constructor(jar: any, cookies: Record<string, any>, signedCookies: Record<string, any>, request?: IHttpRequest, response?: any) {
         this.#jar = jar;
         this.#signedCookies = signedCookies;
         this.#request = request;
@@ -49,7 +50,7 @@ class Cookie {
      * @returns Fluent self instance.
      */
     set(key: string, value: any, options: CookieOptions = {}): this {
-        const isSecure: boolean = typeof this.#request?.secure === 'function' ? this.#request.secure() : false;
+        const isSecure: boolean = Boolean(this.#request?.secure?.());
         this.#response.append('Set-Cookie', this.#jar.createCookies(key, value, options, isSecure));
         return this;
     }
